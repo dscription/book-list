@@ -6,7 +6,8 @@ const app = express();
 
 app.use('/graphql', graphqlHTTP({
   // schema: schema , can be shortened using es6 duplicate property name feature.
-  schema
+  schema,
+  graphiql: true
 }))
 
 app.listen(4000, () => {
