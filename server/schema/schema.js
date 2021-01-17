@@ -12,9 +12,24 @@ const {
 
 // dummy data
 var books = [
-  { name: 'Eloquent JavaScript', genre: 'Computer Science', id: '1' },
-  { name: 'Introduction To Graph Theory', genre: 'Computer Science', id: '2' },
-  { name: 'Cracking the Coding Interview', genre: 'Computer Science', id: '3' },
+  {
+    name: 'Eloquent JavaScript',
+    genre: 'Computer Science',
+    id: '1',
+    authorId: '1',
+  },
+  {
+    name: 'Introduction To Graph Theory',
+    genre: 'Computer Science',
+    id: '2',
+    authorId: '2',
+  },
+  {
+    name: 'Cracking the Coding Interview',
+    genre: 'Computer Science',
+    id: '3',
+    authorId: '3',
+  },
 ];
 
 var authors = [
@@ -29,6 +44,14 @@ const BookType = new GraphQLObjectType({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     genre: { type: GraphQLString },
+    author: {
+      type: AuthorType,
+      // The parent data would be the Book that we already found. The data is passed to the resolve function.
+      resolve(parent, args) {
+        console.log(parent)
+        return _.find(authors, {id: parent.authorId})
+      }
+    }
   }),
 });
 
@@ -53,6 +76,13 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, args) {
         // code to get data from db / other source
         return _.find(books, { id: args.id });
+      },
+    },
+    author: {
+      type: AuthorType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return _.find(authors, { id: args.id });
       },
     },
   },
